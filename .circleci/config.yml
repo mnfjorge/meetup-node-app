@@ -1,0 +1,44 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: node:11-alpine
+    steps:
+      - checkout
+      - run:
+          command: yarn
+      - run:
+          command: yarn build
+
+  tests:
+    docker:
+      - image: node:11-alpine
+    steps:
+      - checkout
+      - run:
+          command: yarn
+      - run:
+          command: yarn test
+
+  deploy:
+    working_directory: ~/repo
+    docker:
+      - image: docker:stable-git
+    steps:
+      - checkout
+      - run:
+          command: git push --force https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git HEAD:refs/heads/master
+
+workflows:
+  build-test-deploy:
+    jobs:
+      - build
+      - tests:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - tests
+          filters:
+            branches:
+              only: master
