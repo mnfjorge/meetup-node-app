@@ -9,8 +9,8 @@ const RecipeCard = ({ recipe }) => {
       </p>
       <div>
         <ul>
-          {recipe.ingredients.map(ingredient => (
-            <li>{ingredient}</li>
+          {recipe.ingredients.map((ingredient, i) => (
+            <li key={i}>{ingredient}</li>
           ))}
         </ul>
       </div>
