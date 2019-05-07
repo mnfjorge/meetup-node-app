@@ -1,5 +1,13 @@
 version: 2.1
 jobs:
+  security-checks:
+    docker:
+      - image: docker:stable
+    steps:
+      - checkout
+      - run:
+          command: docker run --rm -v $PWD:/target hawkeyesec/scanner-cli
+  
   build:
     docker:
       - image: node:11-alpine
@@ -32,7 +40,10 @@ jobs:
 workflows:
   build-test-deploy:
     jobs:
-      - build
+      - security-checks
+      - build:
+          requires:
+            - security-checks
       - tests:
           requires:
             - build
