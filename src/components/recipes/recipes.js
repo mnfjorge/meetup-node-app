@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import RecipeCard from './recipe-card';
-import client from '../../http';
+import clientRecipes from '../../http/recipes';
 
 const Recipes = () => {
   const [recipes, setRecipes] = useState([])
 
   function fetchData() {
-    client.get('/recipes')
-      .then(response => {
-        setRecipes(response.data)
+    clientRecipes.list()
+      .then(list => {
+        setRecipes(list)
       })
   }
 
